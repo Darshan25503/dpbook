@@ -1,0 +1,54 @@
+{
+  "contacts": {
+    "e64991ec-fa75-4cef-be04-d16b20b1fe89": {
+      "id": "e64991ec-fa75-4cef-be04-d16b20b1fe89",
+      "first_name": "Jane",
+      "last_name": "Smith",
+      "phone_numbers": [
+        {
+          "value": "5559876543"
+        }
+      ],
+      "emails": [
+        {
+          "value": "jane@example.com"
+        }
+      ],
+      "notes": null,
+      "tags": [],
+      "metadata": {}
+    },
+    "f477df02-5c0f-485d-b2f3-f13c0258f4c8": {
+      "id": "f477df02-5c0f-485d-b2f3-f13c0258f4c8",
+      "first_name": "Nibha",
+      "last_name": "Bharati",
+      "phone_numbers": [
+        {
+          "value": "9408761856"
+        }
+      ],
+      "emails": [],
+      "notes": null,
+      "tags": [],
+      "metadata": {}
+    },
+    "98bcca71-a257-4af1-9c7d-82baecb9e839": {
+      "id": "98bcca71-a257-4af1-9c7d-82baecb9e839",
+      "first_name": "John",
+      "last_name": "Doe",
+      "phone_numbers": [
+        {
+          "value": "5551234567"
+        }
+      ],
+      "emails": [
+        {
+          "value": "john@example.com"
+        }
+      ],
+      "notes": null,
+      "tags": [],
+      "metadata": {}
+    }
+  }
+}
