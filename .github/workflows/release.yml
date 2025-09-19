@@ -1,0 +1,181 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      release_id: ${{ steps.create_release.outputs.id }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Get tag name
+      id: tag_name
+      run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.tag_name.outputs.TAG_NAME }}
+        release_name: dpbook ${{ steps.tag_name.outputs.TAG_NAME }}
+        body: |
+          ## Changes in ${{ steps.tag_name.outputs.TAG_NAME }}
+          
+          ### Features
+          - List new features here
+          
+          ### Bug Fixes
+          - List bug fixes here
+          
+          ### Breaking Changes
+          - List breaking changes here
+          
+          ## Installation
+          
+          ### Binary Downloads
+          Download the appropriate binary for your platform from the assets below.
+          
+          ### Cargo Install
+          ```bash
+          cargo install dpbook --version ${{ steps.tag_name.outputs.TAG_NAME }}
+          ```
+          
+          ### Docker
+          ```bash
+          docker pull darshan25503/dpbook:${{ steps.tag_name.outputs.TAG_NAME }}
+          ```
+        draft: false
+        prerelease: false
+
+  build-and-upload:
+    name: Build and Upload
+    needs: create-release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact_name: dpbook
+            asset_name: dpbook-linux-x86_64.tar.gz
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            artifact_name: dpbook
+            asset_name: dpbook-linux-x86_64-musl.tar.gz
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact_name: dpbook.exe
+            asset_name: dpbook-windows-x86_64.zip
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            artifact_name: dpbook
+            asset_name: dpbook-macos-x86_64.tar.gz
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            artifact_name: dpbook
+            asset_name: dpbook-macos-aarch64.tar.gz
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: ${{ matrix.target }}
+
+    - name: Install musl tools (Linux musl)
+      if: matrix.target == 'x86_64-unknown-linux-musl'
+      run: sudo apt-get update && sudo apt-get install -y musl-tools
+
+    - name: Build release binary
+      run: cargo build --release --target ${{ matrix.target }}
+
+    - name: Strip binary (Unix)
+      if: matrix.os != 'windows-latest'
+      run: strip target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
+
+    - name: Create archive (Unix)
+      if: matrix.os != 'windows-latest'
+      run: |
+        cd target/${{ matrix.target }}/release
+        tar -czf ../../../${{ matrix.asset_name }} ${{ matrix.artifact_name }}
+
+    - name: Create archive (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        cd target/${{ matrix.target }}/release
+        7z a ../../../${{ matrix.asset_name }} ${{ matrix.artifact_name }}
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./${{ matrix.asset_name }}
+        asset_name: ${{ matrix.asset_name }}
+        asset_content_type: application/octet-stream
+
+  publish-crates-io:
+    name: Publish to crates.io
+    needs: [create-release, build-and-upload]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Publish to crates.io
+      run: cargo publish --token ${{ secrets.CRATES_IO_TOKEN }}
+
+  publish-docker:
+    name: Publish Docker Image
+    needs: create-release
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Get tag name
+      id: tag_name
+      run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/dpbook:${{ steps.tag_name.outputs.TAG_NAME }}
+          ${{ secrets.DOCKER_USERNAME }}/dpbook:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max

@@ -1,4 +1,14 @@
 use clap::{Parser, Subcommand};
+use std::env;
+
+/// Get default contacts file path, supporting Docker environment
+fn default_contacts_file() -> String {
+    if let Ok(data_dir) = env::var("DPBOOK_DATA_DIR") {
+        format!("{}/contacts.json", data_dir)
+    } else {
+        "contacts.json".to_string()
+    }
+}
 
 /// Phonebook CLI Application
 #[derive(Parser)]
@@ -10,7 +20,7 @@ pub struct Cli {
     pub command: Commands,
 
     /// Path to the contacts file
-    #[arg(short, long, default_value = "contacts.json")]
+    #[arg(short, long, default_value_t = default_contacts_file())]
     pub file: String,
 }
 

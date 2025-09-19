@@ -1,4 +1,9 @@
-# Phonebook CLI Application
+# dpbook - CLI Phonebook Application
+
+[![CI/CD Pipeline](https://github.com/Darshan25503/dpbook/actions/workflows/ci.yml/badge.svg)](https://github.com/Darshan25503/dpbook/actions/workflows/ci.yml)
+[![Release](https://github.com/Darshan25503/dpbook/actions/workflows/release.yml/badge.svg)](https://github.com/Darshan25503/dpbook/actions/workflows/release.yml)
+[![Crates.io](https://img.shields.io/crates/v/dpbook.svg)](https://crates.io/crates/dpbook)
+[![Docker](https://img.shields.io/docker/v/darshan25503/dpbook?label=docker)](https://hub.docker.com/r/darshan25503/dpbook)
 
 A Rust-based command-line phonebook application built with clean architecture principles and SOLID design patterns.
 
@@ -60,21 +65,41 @@ src/
 
 ## Installation
 
-### Prerequisites
+### Option 1: Download Pre-built Binaries
+
+Download the latest release for your platform from the [releases page](https://github.com/Darshan25503/dpbook/releases).
+
+### Option 2: Install from crates.io
+
+```bash
+cargo install dpbook
+```
+
+### Option 3: Docker
+
+```bash
+# Pull and run the Docker image
+docker pull darshan25503/dpbook:latest
+
+# Run with persistent data
+docker run -v $(pwd)/data:/app/data darshan25503/dpbook:latest list
+```
+
+### Option 4: Building from Source
+
+#### Prerequisites
 - Rust 1.70 or later
 - Cargo (comes with Rust)
 
-### Building from Source
-
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/Darshan25503/dpbook.git
 cd dpbook
 
 # Build the application
 cargo build --release
 
-# The binary will be available at target/release/phonebook
+# The binary will be available at target/release/dpbook
 ```
 
 ## Usage
@@ -83,35 +108,35 @@ cargo build --release
 
 ```bash
 # Add a new contact
-phonebook add --first-name "John" --last-name "Doe" --phone "555-123-4567" --email "john@example.com"
+dpbook add --first-name "John" --last-name "Doe" --phone "555-123-4567" --email "john@example.com"
 
 # List all contacts
-phonebook list
+dpbook list
 
 # Search for contacts
-phonebook search "john"
+dpbook search "john"
 
 # Find a specific contact by ID
-phonebook find <contact-id>
+dpbook find <contact-id>
 
 # Update a contact
-phonebook update <contact-id> --first-name "Jane" --add-phone "555-987-6543"
+dpbook update <contact-id> --first-name "Jane" --add-phone "555-987-6543"
 
 # Delete a contact
-phonebook delete <contact-id>
+dpbook delete <contact-id>
 
 # Show statistics
-phonebook stats
+dpbook stats
 ```
 
 ### Advanced Usage
 
 ```bash
 # List with pagination and sorting
-phonebook list --page 0 --page-size 5 --sort-by last-name --reverse
+dpbook list --page 0 --page-size 5 --sort-by last-name --reverse
 
 # Add contact with multiple phone numbers and emails
-phonebook add \
+dpbook add \
   --first-name "Alice" \
   --last-name "Smith" \
   --phone "555-111-2222" \
@@ -120,13 +145,13 @@ phonebook add \
   --email "alice@personal.com"
 
 # Update contact by adding and removing information
-phonebook update <contact-id> \
+dpbook update <contact-id> \
   --add-phone "555-999-8888" \
   --remove-email "old@email.com" \
   --notes "Updated contact information"
 
 # Use custom data file
-phonebook --file /path/to/contacts.json list
+dpbook --file /path/to/contacts.json list
 ```
 
 ## Data Storage
