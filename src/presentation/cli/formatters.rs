@@ -49,8 +49,8 @@ impl ContactFormatter {
             .unwrap_or_else(|| "No email".to_string());
 
         format!(
-            "{:<8} {:<25} {:<15} {}",
-            &contact.id().to_string()[..8],
+            "{:<40} {:<25} {:<15} {}",
+            &contact.id().to_string(),
             contact.full_name(),
             phone,
             email
@@ -60,14 +60,14 @@ impl ContactFormatter {
     /// Format the header for contact list
     pub fn format_list_header() -> String {
         format!(
-            "{:<8} {:<25} {:<15} {}",
+            "{:<40} {:<25} {:<15} {}",
             "ID", "Name", "Phone", "Email"
         )
     }
 
     /// Format a separator line
     pub fn format_separator() -> String {
-        "-".repeat(80)
+        "-".repeat(180)
     }
 
     /// Format search results summary
