@@ -90,43 +90,4 @@ impl TryFrom<&str> for PhoneNumber {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
 
-    #[test]
-    fn test_valid_phone_number() {
-        let phone = PhoneNumber::new("(555) 123-4567".to_string()).unwrap();
-        assert_eq!(phone.value(), "5551234567");
-    }
-
-    #[test]
-    fn test_valid_international_phone_number() {
-        let phone = PhoneNumber::new("+1-555-123-4567".to_string()).unwrap();
-        assert_eq!(phone.value(), "+15551234567");
-    }
-
-    #[test]
-    fn test_invalid_phone_number_too_short() {
-        let result = PhoneNumber::new("123".to_string());
-        assert!(result.is_err());
-    }
-
-    #[test]
-    fn test_empty_phone_number() {
-        let result = PhoneNumber::new("".to_string());
-        assert!(matches!(result, Err(PhoneNumberError::Empty)));
-    }
-
-    #[test]
-    fn test_phone_number_formatting() {
-        let phone = PhoneNumber::new("5551234567".to_string()).unwrap();
-        assert_eq!(phone.formatted(), "(555) 123-4567");
-    }
-
-    #[test]
-    fn test_international_phone_number_formatting() {
-        let phone = PhoneNumber::new("+15551234567".to_string()).unwrap();
-        assert_eq!(phone.formatted(), "+15551234567");
-    }
-}

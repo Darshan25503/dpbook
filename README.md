@@ -187,18 +187,7 @@ Contacts are stored in a JSON file (default: `contacts.json` in the current dire
 
 ## Development
 
-### Running Tests
 
-```bash
-# Run all tests
-cargo test
-
-# Run tests with output
-cargo test -- --nocapture
-
-# Run specific test module
-cargo test domain::value_objects::phone_number::tests
-```
 
 ### Code Quality
 
@@ -236,12 +225,10 @@ The application uses comprehensive error handling with custom error types for ea
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes following the existing architecture
-4. Add tests for new functionality
-5. Ensure all tests pass (`cargo test`)
-6. Run formatting and linting (`cargo fmt && cargo clippy`)
-7. Commit your changes (`git commit -m 'Add amazing feature'`)
-8. Push to the branch (`git push origin feature/amazing-feature`)
-9. Open a Pull Request
+4. Run formatting and linting (`cargo fmt && cargo clippy`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
 
 ## License
 

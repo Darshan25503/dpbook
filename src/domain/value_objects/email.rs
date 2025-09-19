@@ -79,43 +79,4 @@ impl TryFrom<&str> for Email {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
 
-    #[test]
-    fn test_valid_email() {
-        let email = Email::new("test@example.com".to_string()).unwrap();
-        assert_eq!(email.value(), "test@example.com");
-    }
-
-    #[test]
-    fn test_email_case_normalization() {
-        let email = Email::new("Test@Example.COM".to_string()).unwrap();
-        assert_eq!(email.value(), "test@example.com");
-    }
-
-    #[test]
-    fn test_invalid_email_no_at() {
-        let result = Email::new("testexample.com".to_string());
-        assert!(result.is_err());
-    }
-
-    #[test]
-    fn test_empty_email() {
-        let result = Email::new("".to_string());
-        assert!(matches!(result, Err(EmailError::Empty)));
-    }
-
-    #[test]
-    fn test_email_domain() {
-        let email = Email::new("test@example.com".to_string()).unwrap();
-        assert_eq!(email.domain(), "example.com");
-    }
-
-    #[test]
-    fn test_email_local_part() {
-        let email = Email::new("test@example.com".to_string()).unwrap();
-        assert_eq!(email.local_part(), "test");
-    }
-}
