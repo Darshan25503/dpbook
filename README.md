@@ -69,7 +69,7 @@ src/
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd phonebook
+cd dpbook
 
 # Build the application
 cargo build --release
