@@ -1,9 +1,6 @@
 # dpbook - CLI Phonebook Application
 
-[![CI/CD Pipeline](https://github.com/Darshan25503/dpbook/actions/workflows/ci.yml/badge.svg)](https://github.com/Darshan25503/dpbook/actions/workflows/ci.yml)
-[![Release](https://github.com/Darshan25503/dpbook/actions/workflows/release.yml/badge.svg)](https://github.com/Darshan25503/dpbook/actions/workflows/release.yml)
-[![Crates.io](https://img.shields.io/crates/v/dpbook.svg)](https://crates.io/crates/dpbook)
-[![Docker](https://img.shields.io/docker/v/darshan25503/dpbook?label=docker)](https://hub.docker.com/r/darshan25503/dpbook)
+
 
 A Rust-based command-line phonebook application built with clean architecture principles and SOLID design patterns.
 
