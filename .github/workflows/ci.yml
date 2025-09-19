@@ -157,7 +157,7 @@ jobs:
         zip dpbook-windows-x86_64.zip dpbook-windows-x86_64.exe/dpbook.exe
 
     - name: Upload release assets
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         files: |
           dpbook-linux-x86_64.tar.gz
